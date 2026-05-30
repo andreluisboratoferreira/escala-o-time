@@ -38,7 +38,7 @@
             text-align: center;
             margin-bottom: 3rem;
             width: 100%;
-            max-width: 800px;
+            max-width: 900px;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -83,8 +83,10 @@
             background-color: #3a1111;
             border-color: #ff4444;
             color: #ff8888;
-            padding: 0.3rem 0.6rem;
+            padding: 0.4rem 0.8rem;
             font-size: 0.8rem;
+            border-radius: 4px;
+            width: 100%;
         }
 
         .btn-danger:hover {
@@ -96,13 +98,13 @@
         /* Conteúdo Principal */
         main {
             width: 100%;
-            max-width: 800px;
+            max-width: 900px;
             display: flex;
             flex-direction: column;
             gap: 2rem;
         }
 
-        /* Painel Administrativo (Escondido por padrão) */
+        /* Painel Administrativo */
         #admin-panel {
             display: none;
             background: linear-gradient(145deg, var(--bg-card), #1e1430);
@@ -127,7 +129,7 @@
 
         .form-group {
             flex: 1;
-            min-width: 160px;
+            min-width: 200px;
             display: flex;
             flex-direction: column;
             gap: 0.5rem;
@@ -147,6 +149,11 @@
             outline: none;
         }
 
+        input[type="file"] {
+            padding: 0.4rem;
+            font-size: 0.85rem;
+        }
+
         input:focus, select:focus {
             border-color: var(--roxo-neon);
         }
@@ -154,20 +161,19 @@
         /* Grid de Jogadores */
         .grid-jogadores {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
             gap: 1.5rem;
         }
 
         .card-jogador {
             background-color: var(--bg-card);
             border: 1px solid var(--borda);
-            border-radius: 10px;
-            padding: 1.5rem;
+            border-radius: 12px;
+            overflow: hidden;
             display: flex;
             flex-direction: column;
-            position: relative;
-            overflow: hidden;
             transition: transform 0.2s, border-color 0.2s;
+            position: relative;
         }
 
         .card-jogador:hover {
@@ -175,19 +181,55 @@
             border-color: var(--roxo-neon);
         }
 
-        .numero-camisa {
-            position: absolute;
-            right: -10px;
-            bottom: -20px;
-            font-size: 6rem;
-            font-weight: 900;
-            color: rgba(138, 43, 226, 0.05);
-            z-index: 1;
+        /* Foto do Jogador */
+        .foto-container {
+            width: 100%;
+            height: 220px;
+            background-color: #1c1527;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
 
-        .info-jogador {
-            position: relative;
+        .foto-jogador {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Avatar padrão estilizado em SVG quando não há foto */
+        .avatar-padrao {
+            width: 40%;
+            fill: var(--borda);
+        }
+
+        .numero-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: rgba(11, 7, 17, 0.85);
+            border: 1px solid var(--roxo-neon);
+            color: var(--texto-claro);
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: 800;
+            font-size: 1rem;
             z-index: 2;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        }
+
+        /* Detalhes do texto */
+        .info-jogador {
+            padding: 1.2rem;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
         }
 
         .posicao {
@@ -196,32 +238,27 @@
             letter-spacing: 1px;
             color: var(--roxo-neon);
             font-weight: 700;
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.3rem;
         }
 
         .nome {
-            font-size: 1.25rem;
+            font-size: 1.15rem;
             font-weight: 600;
-            margin-bottom: 0.2rem;
-        }
-
-        .numero-display {
-            font-size: 0.9rem;
-            color: var(--texto-mutado);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .actions {
-            margin-top: 1.5rem;
-            display: none; /* Só aparece para o admin */
-            position: relative;
-            z-index: 3;
+            padding: 0 1.2rem 1.2rem 1.2rem;
+            display: none; /* Ativado apenas para o admin */
         }
 
         /* Feedback vazio */
         .sem-jogadores {
             text-align: center;
             color: var(--texto-mutado);
-            padding: 3rem;
+            padding: 4rem;
             border: 1px dashed var(--borda);
             border-radius: 10px;
             grid-column: 1 / -1;
@@ -249,7 +286,7 @@
             <form id="form-jogador" onsubmit="adicionarJogador(event)">
                 <div class="form-group">
                     <label for="nome">Nome do Jogador</label>
-                    <input type="text" id="nome" required placeholder="Ex: Neymar Jr">
+                    <input type="text" id="nome" required placeholder="Ex: Lucas Silva">
                 </div>
                 <div class="form-group">
                     <label for="posicao">Posição</label>
@@ -265,8 +302,12 @@
                     <label for="numero">Número da Camisa</label>
                     <input type="number" id="numero" required min="1" max="99" placeholder="10">
                 </div>
-                <div class="form-group" style="justify-content: flex-end; min-width: 100px;">
-                    <button type="submit" class="btn" style="width: 100%;">Escalar</button>
+                <div class="form-group">
+                    <label for="foto">Foto do Jogador (Opcional)</label>
+                    <input type="file" id="foto" accept="image/*">
+                </div>
+                <div class="form-group" style="justify-content: flex-end; min-width: 100px; padding-top: 1.4rem;">
+                    <button type="submit" class="btn" style="width: 100%;">Escalar Jogador</button>
                 </div>
             </form>
         </section>
@@ -283,7 +324,10 @@
         let isAdmin = false;
 
         // Banco de dados simulado no LocalStorage
-        let jogadores = JSON.parse(localStorage.getItem('escalacao_apex')) || [];
+        let jogadores = JSON.parse(localStorage.getItem('escalacao_apex_v2')) || [];
+
+        // Ícone padrão em SVG para jogadores sem foto
+        const svgAvatarPadrao = `<svg class="avatar-padrao" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>`;
 
         // Renderiza a lista de jogadores na tela
         function renderizarJogadores() {
@@ -295,19 +339,27 @@
                 return;
             }
 
-            // Ordena por posição para ficar organizado
+            // Ordena por posição
             const ordemPosicoes = { "Goleiro": 1, "Zagueiro": 2, "Lateral": 3, "Meio-Campo": 4, "Atacante": 5 };
             jogadores.sort((a, b) => ordemPosicoes[a.posicao] - ordemPosicoes[b.posicao]);
 
             jogadores.forEach((jog, index) => {
                 const card = document.createElement('div');
                 card.className = 'card-jogador';
+                
+                // Verifica se tem foto cadastrada, senão coloca o padrão
+                const fotoHtml = jog.foto 
+                    ? `<img src="${jog.foto}" class="foto-jogador" alt="${jog.nome}">`
+                    : svgAvatarPadrao;
+
                 card.innerHTML = `
-                    <div class="numero-camisa">${jog.numero}</div>
+                    <div class="foto-container">
+                        <div class="numero-badge">${jog.numero}</div>
+                        ${fotoHtml}
+                    </div>
                     <div class="info-jogador">
                         <div class="posicao">${jog.posicao}</div>
-                        <div class="nome">${jog.nome}</div>
-                        <div class="numero-display">Nº ${jog.numero}</div>
+                        <div class="nome" title="${jog.nome}">${jog.nome}</div>
                     </div>
                     <div class="actions" style="display: ${isAdmin ? 'block' : 'none'}">
                         <button class="btn btn-danger" onclick="removerJogador(${index})">Remover</button>
@@ -320,7 +372,6 @@
         // Função de Validação de E-mail
         function autenticarAdmin() {
             if (isAdmin) {
-                // Se já for admin, clica para sair
                 isAdmin = false;
                 document.getElementById('admin-panel').style.display = 'none';
                 document.getElementById('btn-login').innerText = 'Área do Dono';
@@ -330,20 +381,20 @@
 
             const emailInformado = prompt("Digite seu e-mail para acessar o painel de gerenciamento:");
             
-            if (emailInformado === null) return; // Cancelou o prompt
+            if (emailInformado === null) return;
 
             if (emailInformado.trim().toLowerCase() === EMAIL_AUTORIZADO) {
                 isAdmin = true;
                 document.getElementById('admin-panel').style.display = 'block';
                 document.getElementById('btn-login').innerText = 'Sair do Modo Admin';
                 alert("Acesso concedido. Bem-vindo de volta, Chefe!");
-                renderizarJogadores(); // Recarrega para mostrar botões de apagar
+                renderizarJogadores();
             } else {
                 alert("Acesso negado. Apenas o proprietário autorizado pode modificar a escalação.");
             }
         }
 
-        // Adicionar jogador
+        // Adicionar jogador (Lidando com conversão de imagem opcional)
         function adicionarJogador(event) {
             event.preventDefault();
             
@@ -355,16 +406,27 @@
             const nome = document.getElementById('nome').value;
             const posicao = document.getElementById('posicao').value;
             const numero = document.getElementById('numero').value;
+            const fotoInput = document.getElementById('foto');
 
-            const novoJogador = { nome, posicao, numero };
-            jogadores.push(novoJogador);
-            
-            // Salva e atualiza a tela
-            localStorage.setItem('escalacao_apex', JSON.stringify(jogadores));
-            renderizarJogadores();
+            const salvarNoBanco = (fotoBase64 = null) => {
+                const novoJogador = { nome, posicao, numero, foto: fotoBase64 };
+                jogadores.push(novoJogador);
+                
+                localStorage.setItem('escalacao_apex_v2', JSON.stringify(jogadores));
+                renderizarJogadores();
+                document.getElementById('form-jogador').reset();
+            };
 
-            // Limpa o formulário
-            document.getElementById('form-jogador').reset();
+            // Se o usuário anexou uma foto, processa ela primeiro
+            if (fotoInput.files && fotoInput.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    salvarNoBanco(e.target.result); // Salva com a foto processada
+                };
+                reader.readAsDataURL(fotoInput.files[0]);
+            } else {
+                salvarNoBanco(); // Salva sem foto (ficará com o avatar padrão)
+            }
         }
 
         // Remover jogador
@@ -373,7 +435,7 @@
             
             if (confirm(`Remover ${jogadores[index].nome} da escalação?`)) {
                 jogadores.splice(index, 1);
-                localStorage.setItem('escalacao_apex', JSON.stringify(jogadores));
+                localStorage.setItem('escalacao_apex_v2', JSON.stringify(jogadores));
                 renderizarJogadores();
             }
         }
